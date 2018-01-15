@@ -1,6 +1,6 @@
 <template>
     <div id="wrapper">
-        <v-component v-if="true" :is="'clock'"/>
+        test page
     </div>
 </template>
 

@@ -3,7 +3,7 @@
 process.env.BABEL_ENV = 'main'
 
 const path = require('path')
-const { dependencies } = require('../package.json')
+const {dependencies} = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
@@ -17,6 +17,10 @@ let mainConfig = {
   ],
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        loaders: ['babel-loader', 'ts-loader']
+      },
       {
         test: /\.(js)$/,
         enforce: 'pre',
@@ -52,7 +56,7 @@ let mainConfig = {
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
-    extensions: ['.js', '.json', '.node']
+    extensions: ['.ts', '.tsx', '.js', '.json', '.node']
   },
   target: 'electron-main'
 }

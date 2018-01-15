@@ -111,6 +111,8 @@
     "require-dir": "^0.3.0",
     "spectron": "^3.7.1",
     "style-loader": "^0.18.2",
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.2",
     "url-loader": "^0.5.9",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.0.5",
