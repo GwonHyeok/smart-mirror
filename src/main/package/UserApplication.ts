@@ -1,14 +1,7 @@
 import NodeModule from './NodeModule'
 import PackageInfo from './PackageInfo'
-
-export class UserApplicationComponent {
-    name: string
-    path: string
-}
-
-export class UserApplicationService {
-
-}
+import UserApplicationComponent from './UserApplicationComponent';
+import UserApplicationService from './UserApplicationService';
 
 export default class UserApplication implements PackageInfo {
     name: string

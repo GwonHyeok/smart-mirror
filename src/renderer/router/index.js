@@ -8,13 +8,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      name: 'splash',
+      component: require('@/components/Splash').default
     },
     {
-      path: '/splash',
-      name: 'splash',
-      component: Splash
+      path: '/home',
+      name: 'home',
+      component: require('@/components/LandingPage').default
     },
     {
       path: '*',

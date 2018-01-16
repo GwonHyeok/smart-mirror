@@ -1,19 +1,35 @@
 <template>
+<div>
     <img src="https://media.giphy.com/media/5bWwzEt5TCvzG/giphy.gif"/>
+    <p>Wait for finish launching SmartMirror</p>
+    <v-component v-if="isLoading" :is="'clock'"></v-component>
+</div>
 </template>
 
 <script>
-  export default {
-    name: 'splash',
-    mounted () {
-      console.log(this)
-      console.log(this.num)
-      console.log(this.$router)
-    },
-    data () {
-      return {
-        num: 1
+import Vue from "vue";
+
+export default {
+  name: "splash",
+  mounted() {
+    // Register Component
+    this.$electron.ipcRenderer.on(
+      "register-component",
+      (event, componentName, componentText) => {
+        Vue.component(componentName, eval(componentText));
       }
-    }
+    );
+
+    // If Finish Main Process Processing go HomePage
+    this.$electron.ipcRenderer.on("launchApp", () => {
+      console.log("finish loading Main Process");
+      this.isLoading = true;
+    });
+  },
+  data() {
+    return {
+      isLoading: false
+    };
   }
+};
 </script>

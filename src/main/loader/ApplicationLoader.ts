@@ -1,12 +1,13 @@
 import { Logger } from '../util/Logger'
-import NodeModule from './NodeModule'
-import UserApplication from './UserApplication'
+import NodeModule from '../package/NodeModule'
+import UserApplication from '../package/UserApplication'
+import PackageInfo from '../package/PackageInfo'
 
 import gmPath from 'global-modules'
 import * as fs from 'fs'
 import * as util from 'util'
 import * as path from 'path'
-import PackageInfo from './PackageInfo';
+import UserApplicationComponent from '../package/UserApplicationComponent';
 
 export default class ApplicationLoader {
 
@@ -27,7 +28,7 @@ export default class ApplicationLoader {
     /**
      * 유저가 설치한 어플리케이션을, 로드한다
      */
-    async loadUserApplicatioin(): Promise<boolean> {
+    async loadUserApplicatioin(): Promise<UserApplication[]> {
         Logger.info('Load User Applicatioin')
         const installedNodeModules = (await Promise.all([this.getGlobalModules(), this.getLocalUserModules()]))
             .reduce((previousValue, currentValue): NodeModule[] => {
@@ -50,7 +51,7 @@ export default class ApplicationLoader {
         Logger.debug(`Application List`)
         smartMirrorApplications.forEach(app => Logger.debug(`${app.name}(${app.version})`))
 
-        return true
+        return smartMirrorApplications
     }
 
     /**
@@ -153,6 +154,9 @@ export default class ApplicationLoader {
         if (isSmartMirrorApp) {
             Object.assign(userApplication, packageInfo)
             userApplication.nodeModule = nodeModule
+            userApplication.application.components.map(
+                value => new UserApplicationComponent()
+            )
             return userApplication
         }
 
@@ -176,7 +180,19 @@ export default class ApplicationLoader {
      */
     private async parseManifest(manifestJsonPath: string): Promise<UserApplication> {
         const file = await this.readFile(manifestJsonPath)
-        return JSON.parse(String(file))
+        const userApplicationJSON: UserApplication = JSON.parse(String(file))
+
+        let userApplication = Object.assign(new UserApplication(), userApplicationJSON)
+        if (userApplication.application && userApplication.application.components) {
+            userApplication.application.components = userApplication.application.components.map(componentJson => {
+                const component = new UserApplicationComponent()
+                component.name = componentJson.name
+                component.filePath = componentJson.filePath
+                return component
+            })
+        }
+
+        return userApplication
     }
 
 }

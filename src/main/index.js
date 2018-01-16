@@ -2,6 +2,8 @@
 
 import { app, BrowserWindow } from 'electron'
 import ApplicationLoader from './loader/ApplicationLoader'
+import PackageManager from './package/manager/PackageManager'
+import { mainWindowProvider } from './util/MainWindowProvider'
 
 /**
  * Set `__static` path to static files in production
@@ -11,29 +13,27 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
-  const applicationLoader = new ApplicationLoader()
-  applicationLoader.loadUserApplicatioin().then()
+function createWindow() {
 
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
+  // Create Main Window
+  mainWindowProvider.createMainWindow({
     height: 563,
     useContentSize: true,
     width: 1000
   })
+  mainWindowProvider.getMainWindow().loadURL(winURL)
+  mainWindowProvider.getMainWindow().on('closed', () => mainWindowProvider.updateMainWindow(null))
 
-  mainWindow.loadURL(winURL)
+  const applicationLoader = new ApplicationLoader()
+  const packageManager = new PackageManager()
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+  applicationLoader.loadUserApplicatioin()
+    .then(userApplications => packageManager.registerPackages(userApplications))
+    .then(result => mainWindowProvider.getMainWindow().webContents.send('launchApp'))
 }
 
 app.on('ready', createWindow)
@@ -45,7 +45,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (mainWIndowProvider.getMainWindow() === null) {
     createWindow()
   }
 })
