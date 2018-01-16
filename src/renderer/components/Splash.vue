@@ -2,7 +2,6 @@
 <div>
     <img src="https://media.giphy.com/media/5bWwzEt5TCvzG/giphy.gif"/>
     <p>Wait for finish launching SmartMirror</p>
-    <v-component v-if="isLoading" :is="'clock'"></v-component>
 </div>
 </template>
 
@@ -22,14 +21,14 @@ export default {
 
     // If Finish Main Process Processing go HomePage
     this.$electron.ipcRenderer.on("launchApp", () => {
-      console.log("finish loading Main Process");
-      this.isLoading = true;
+      setTimeout(() => {
+        this.$router.push("/home");
+        console.log('move to home page')
+      }, 1000);
     });
   },
   data() {
-    return {
-      isLoading: false
-    };
+    return {};
   }
 };
 </script>
