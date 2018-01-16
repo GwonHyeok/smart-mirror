@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
-import { ApplicationLoader } from './loader/ApplicationLoader'
+import ApplicationLoader from './loader/ApplicationLoader'
 
 /**
  * Set `__static` path to static files in production
@@ -18,6 +18,7 @@ const winURL = process.env.NODE_ENV === 'development'
 
 function createWindow () {
   const applicationLoader = new ApplicationLoader()
+  applicationLoader.loadUserApplicatioin().then()
 
   /**
    * Initial window options

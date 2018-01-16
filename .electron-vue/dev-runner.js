@@ -3,8 +3,8 @@
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
-const { say } = require('cfonts')
-const { spawn } = require('child_process')
+const {say} = require('cfonts')
+const {spawn} = require('child_process')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
@@ -43,14 +43,14 @@ function startRenderer () {
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
 
     const compiler = webpack(rendererConfig)
-    hotMiddleware = webpackHotMiddleware(compiler, { 
-      log: false, 
-      heartbeat: 2500 
+    hotMiddleware = webpackHotMiddleware(compiler, {
+      log: false,
+      heartbeat: 2500
     })
 
     compiler.plugin('compilation', compilation => {
       compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
-        hotMiddleware.publish({ action: 'reload' })
+        hotMiddleware.publish({action: 'reload'})
         cb()
       })
     })
@@ -85,7 +85,7 @@ function startMain () {
 
     compiler.plugin('watch-run', (compilation, done) => {
       logStats('Main', chalk.white.bold('compiling...'))
-      hotMiddleware.publish({ action: 'compiling' })
+      hotMiddleware.publish({action: 'compiling'})
       done()
     })
 
