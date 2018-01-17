@@ -104,6 +104,7 @@ export default class ApplicationLoader {
 
         let userApplication: UserApplication = null
         let packageInfo: PackageInfo = null
+        let applicationEntry: string
 
         let hasSmartMirrorAppKeyword = false
 
@@ -120,31 +121,39 @@ export default class ApplicationLoader {
         // Parse Package Info
         try {
             packageInfo = await this.parsePackageInfo(packageJsonPath)
-            const { name, version, keywords } = packageInfo
+            const { name, version, keywords, main } = packageInfo
 
             // It has Smart Mirror App Keywords (aka smart-mirror)
             if (keywords) hasSmartMirrorAppKeyword = keywords.indexOf('smart-mirror') !== -1
 
             // Smart Mirror App Keyword
             if (!hasSmartMirrorAppKeyword) return null
+
+            // Application Entry Point
+            applicationEntry = main
+            if (!applicationEntry) {
+                // Has Smart Mirror App Keyword but Application Entry Is Not Set
+                Logger.error(`Application Entry Point Is Not Set`)
+                return null
+            }
         } catch (error) {
             Logger.error(`${error} : ${nodeModule.path}`)
             return null
         }
 
-        // Parse Manifest
+        // Parse Application
         try {
-            // Check it has manifest.json in this module
-            const manifestJsonPath = path.join(nodeModule.path, 'manifest.json')
-            const isExistManifestJson = await fs.existsSync(manifestJsonPath)
+            // Check it has applicationEntry Point in this module
+            const applicationEntryPath = path.join(nodeModule.path, applicationEntry)
+            const isExistApplicationEntry = await fs.existsSync(applicationEntryPath)
 
-            // skip this module if manifest.json is not found
-            if (!isExistManifestJson) {
-                Logger.warn(`manifest.json is not found. Skip This Module -- ${nodeModule.path}`)
+            // skip this module if Application Entry is not found
+            if (!isExistApplicationEntry) {
+                Logger.warn(`Application Entry is not found. Skip This Module -- ${nodeModule.path}`)
                 return null
             }
 
-            userApplication = await this.parseManifest(manifestJsonPath)
+            userApplication = await this.parseApplicationInfo(applicationEntryPath)
         } catch (error) {
             Logger.error(`${error} : ${nodeModule.path}`)
             return null
@@ -154,9 +163,6 @@ export default class ApplicationLoader {
         if (isSmartMirrorApp) {
             Object.assign(userApplication, packageInfo)
             userApplication.nodeModule = nodeModule
-            userApplication.application.components.map(
-                value => new UserApplicationComponent()
-            )
             return userApplication
         }
 
@@ -174,22 +180,23 @@ export default class ApplicationLoader {
     }
 
     /**
-     * Parse manifest.json from file path
+     * Parse ApplicationInfo from file path
      *
-     * @param manifestJsonPath manifestJsonPath
+     * @param applicationEntryPath applicationEntryPath
      */
-    private async parseManifest(manifestJsonPath: string): Promise<UserApplication> {
-        const file = await this.readFile(manifestJsonPath)
-        const userApplicationJSON: UserApplication = JSON.parse(String(file))
+    private async parseApplicationInfo(applicationEntryPath: string): Promise<UserApplication> {
+        const file = await this.readFile(applicationEntryPath)
+        const code = String(file)
+        const userApplicationInfo: UserApplication = eval(code)
 
-        let userApplication = Object.assign(new UserApplication(), userApplicationJSON)
+        let userApplication = Object.assign(new UserApplication(), userApplicationInfo)
         if (userApplication.application && userApplication.application.components) {
             userApplication.application.components = userApplication.application.components.map(componentJson => {
                 const component = new UserApplicationComponent()
                 component.name = componentJson.name
-                component.filePath = componentJson.filePath
                 return component
             })
+            userApplication.code = code
         }
 
         return userApplication

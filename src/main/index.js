@@ -1,9 +1,12 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import ApplicationLoader from './loader/ApplicationLoader'
 import PackageManager from './package/manager/PackageManager'
 import { mainWindowProvider } from './util/MainWindowProvider'
+
+import applicationProvider from './util/ApplicationProvider'
+import vueProvider from './util/VueProvider'
 
 /**
  * Set `__static` path to static files in production
@@ -27,13 +30,6 @@ function createWindow() {
   })
   mainWindowProvider.getMainWindow().loadURL(winURL)
   mainWindowProvider.getMainWindow().on('closed', () => mainWindowProvider.updateMainWindow(null))
-
-  const applicationLoader = new ApplicationLoader()
-  const packageManager = new PackageManager()
-
-  applicationLoader.loadUserApplicatioin()
-    .then(userApplications => packageManager.registerPackages(userApplications))
-    .then(result => mainWindowProvider.getMainWindow().webContents.send('launchApp'))
 }
 
 app.on('ready', createWindow)
@@ -69,3 +65,25 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+/**
+ * splash page can call this events
+ * 
+ * when mounted splash component, call this event
+ */
+ipcMain.on('initialize-user-applications', (event, arg) => {
+
+  // Initialize Application
+  const applicationLoader = new ApplicationLoader()
+  const packageManager = new PackageManager()
+
+  // Load Application
+  applicationLoader.loadUserApplicatioin()
+    .then(userApplications => applicationProvider.setUserApplications(userApplications))
+    .then(_ => applicationProvider.getUserApplications())
+    .then(userApplications => packageManager.registerPackages(userApplications))
+    .then(result => mainWindowProvider.getMainWindow().webContents.send('launchApp'))
+})
+
+// Setup Global Variables
+global.applicationProvider = applicationProvider

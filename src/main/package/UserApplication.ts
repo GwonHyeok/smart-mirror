@@ -7,10 +7,12 @@ export default class UserApplication implements PackageInfo {
     name: string
     version: string
     description: string
+    main: string
     keywords: string[]
     nodeModule: NodeModule
     application: {
         components: UserApplicationComponent[],
         services: UserApplicationService[]
     }
+    code: string
 }

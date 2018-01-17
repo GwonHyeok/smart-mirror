@@ -1,7 +1,10 @@
 <template>
     <div id="wrapper">
         test page
-        <clock></clock>
+        <br>
+        <clock-webpack></clock-webpack>
+        <br>
+        <clock-webpack></clock-webpack>
     </div>
 </template>
 

@@ -11,24 +11,35 @@ import Vue from "vue";
 export default {
   name: "splash",
   mounted() {
+    
+    // Initialize User Application
+    this.$electron.ipcRenderer.send('initialize-user-applications')
+
     // Register Component
-    this.$electron.ipcRenderer.on(
-      "register-component",
-      (event, componentName, componentText) => {
-        Vue.component(componentName, eval(componentText));
-      }
-    );
+    this.$electron.ipcRenderer.on("register-component", this.registerComponent);
 
     // If Finish Main Process Processing go HomePage
-    this.$electron.ipcRenderer.on("launchApp", () => {
-      setTimeout(() => {
-        this.$router.push("/home");
-        console.log('move to home page')
-      }, 1000);
-    });
+    this.$electron.ipcRenderer.on("launchApp", this.launchApp);
   },
-  data() {
-    return {};
+  data: () => {
+    return {}
+  },
+  methods: {
+    registerComponent: function (event, appName, componentName) {
+        const appProvider = this.$electron.remote.getGlobal('applicationProvider')
+
+        appProvider.findApplication(appName)
+          .then(app => {
+              const userApp = eval(app.code)
+              const { component } = userApp.application.components
+                .filter(component => component.name === componentName)[0]
+              Vue.component(componentName, component.default);
+          })
+    },
+
+    launchApp: function (event) {
+      setTimeout(() => this.$router.push("/home"), 1000);
+    }
   }
 };
 </script>
