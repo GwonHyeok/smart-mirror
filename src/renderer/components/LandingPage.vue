@@ -1,6 +1,7 @@
 <template>
     <div id="wrapper">
         test page
+        <clock></clock>
     </div>
 </template>
 
