@@ -8,6 +8,7 @@ import * as fs from 'fs'
 import * as util from 'util'
 import * as path from 'path'
 import UserApplicationComponent from '../package/UserApplicationComponent';
+import UserApplicationInfo from '../package/UserApplicationInfo';
 
 export default class ApplicationLoader {
 
@@ -28,7 +29,7 @@ export default class ApplicationLoader {
     /**
      * 유저가 설치한 어플리케이션을, 로드한다
      */
-    async loadUserApplicatioin(): Promise<UserApplication[]> {
+    async loadUserApplicatioin(): Promise<UserApplicationInfo[]> {
         Logger.info('Load User Applicatioin')
         const installedNodeModules = (await Promise.all([this.getGlobalModules(), this.getLocalUserModules()]))
             .reduce((previousValue, currentValue): NodeModule[] => {
@@ -38,7 +39,7 @@ export default class ApplicationLoader {
 
         // Find User Applications from Global, Local Node Modules
         Logger.info(`Check All Modules : ${installedNodeModules.length}`)
-        const smartMirrorApplications: UserApplication[] = []
+        const smartMirrorApplications: UserApplicationInfo[] = []
         for (const nodeModule of installedNodeModules) {
             const smartMirrorApplication = await this.checkSmartMirrorApplication(nodeModule)
             if (smartMirrorApplication) {
@@ -96,13 +97,13 @@ export default class ApplicationLoader {
      *
      * @param nodeModule node module
      */
-    private async checkSmartMirrorApplication(nodeModule: NodeModule): Promise<UserApplication> {
+    private async checkSmartMirrorApplication(nodeModule: NodeModule): Promise<UserApplicationInfo> {
         if (!nodeModule.path) {
             Logger.warn(`path is not set. Skip This Module -- ${nodeModule.path}`)
             return null
         }
 
-        let userApplication: UserApplication = null
+        let userApplication: UserApplicationInfo = null
         let packageInfo: PackageInfo = null
         let applicationEntry: string
 
@@ -161,7 +162,7 @@ export default class ApplicationLoader {
 
         const isSmartMirrorApp = hasSmartMirrorAppKeyword
         if (isSmartMirrorApp) {
-            Object.assign(userApplication, packageInfo)
+            userApplication = Object.assign(new UserApplicationInfo(), userApplication, packageInfo)
             userApplication.nodeModule = nodeModule
             return userApplication
         }
@@ -184,22 +185,12 @@ export default class ApplicationLoader {
      *
      * @param applicationEntryPath applicationEntryPath
      */
-    private async parseApplicationInfo(applicationEntryPath: string): Promise<UserApplication> {
+    private async parseApplicationInfo(applicationEntryPath: string): Promise<UserApplicationInfo> {
         const file = await this.readFile(applicationEntryPath)
-        const code = String(file)
-        const userApplicationInfo: UserApplication = eval(code)
+        const info = eval(String(file))
 
-        let userApplication = Object.assign(new UserApplication(), userApplicationInfo)
-        if (userApplication.application && userApplication.application.components) {
-            userApplication.application.components = userApplication.application.components.map(componentJson => {
-                const component = new UserApplicationComponent()
-                component.name = componentJson.name
-                return component
-            })
-            userApplication.code = code
-        }
-
-        return userApplication
+        const userApplicationInfo: UserApplicationInfo = info
+        return userApplicationInfo
     }
 
 }

@@ -1,6 +1,12 @@
 <template>
     <div id="wrapper">
         <clock-webpack></clock-webpack>
+
+        <br>
+
+        <div style="margin-top:60px;">
+            <weather></weather>
+        </div>
     </div>
 </template>
 

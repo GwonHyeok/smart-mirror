@@ -18,7 +18,10 @@ const mainInstance = new Vue({
 }).$mount('#app')
 
 // Register Vue Plugin
-mainInstance.$electron.ipcRenderer.on('register-vue-plugin', (event, application) => {
-  const app = eval(application.code)
-  app.plugins.forEach(plugin => { Vue.use(plugin) })
+mainInstance.$electron.ipcRenderer.on('register-vue-plugin', (event, appName) => {
+  const appProvider = mainInstance.$electron.remote.getGlobal("applicationProvider");
+  appProvider.findApplication(appName).then(app => {
+    const plugins = eval(app.code.plugins);
+    plugins.forEach(plugin => Vue.use(plugin))
+  });
 })

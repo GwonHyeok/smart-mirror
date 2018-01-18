@@ -79,8 +79,8 @@ ipcMain.on('initialize-user-applications', (event, arg) => {
 
   // Load Application
   applicationLoader.loadUserApplicatioin()
-    .then(userApplications => applicationProvider.setUserApplications(userApplications))
-    .then(_ => applicationProvider.getUserApplications())
+    .then(userApplications => applicationProvider.setUserApplicationInfos(userApplications))
+    .then(_ => applicationProvider.getUserApplicationInfos())
     .then(userApplications => packageManager.registerPackages(userApplications))
     .then(result => mainWindowProvider.getMainWindow().webContents.send('launchApp'))
 })
