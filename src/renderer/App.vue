@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'smart-mirror'
+    name: 'universe-mirror'
   }
 </script>
 
