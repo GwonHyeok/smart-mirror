@@ -2,10 +2,13 @@ import UserApplication from "../UserApplication"
 import { Logger } from "../../util/Logger"
 import { mainWindowProvider } from "../../util/MainWindowProvider";
 import UserApplicationInfo from "../UserApplicationInfo";
+import * as electron from "electron"
 import * as path from 'path'
 import * as fs from 'fs'
 import * as util from 'util'
 import UserApplicationComponent from "../UserApplicationComponent";
+
+declare var __non_webpack_require__
 
 export default class PackageManager {
 
@@ -24,6 +27,7 @@ export default class PackageManager {
         for (const userApplication of userApplications) {
             await this.registerComponents(userApplication)
             await this.registerPlugins(userApplication)
+            await this.registerService(userApplication)
         }
     }
 
@@ -127,4 +131,21 @@ export default class PackageManager {
             .send('register-vue-plugin', app.name)
     }
 
+    /**
+     * Register Service
+     * @param app 
+     */
+    private async registerService(app: UserApplicationInfo) {
+        Logger.info(`Register Services '${app.application.services}'`)
+
+        const path = `${app.nodeModule.path}/${app.application.services}`
+        const userServices = __non_webpack_require__(path)
+        userServices.forEach(userService => {
+            const Service = userService.component
+            const ServiceName = userService.name
+
+            Logger.info(`Register Service '${ServiceName}'`)
+            const service = new Service(electron)
+        })
+    }
 }

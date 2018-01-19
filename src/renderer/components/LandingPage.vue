@@ -17,6 +17,7 @@
     name: 'landing-page',
     components: {SystemInformation},
     mounted () {
+        this.$electron.ipcRenderer.send('request-weather', '37.3445552','126.7366292')
     },
     methods: {
       open (link) {
