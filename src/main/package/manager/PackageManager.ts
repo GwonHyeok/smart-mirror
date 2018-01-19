@@ -7,6 +7,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as util from 'util'
 import UserApplicationComponent from "../UserApplicationComponent";
+import applicationProvider from '../../util/ApplicationProvider'
 
 declare var __non_webpack_require__
 
@@ -76,6 +77,9 @@ export default class PackageManager {
      * @param appComponent 
      */
     private async registerComponent(app: UserApplicationInfo, appComponent: UserApplicationComponent) {
+
+        // Save Component List to ApplicationProvider
+        applicationProvider.addComponent(appComponent.name)
 
         // Read Component Script As Text
         Logger.info(`Register Component '${appComponent.name}'`)

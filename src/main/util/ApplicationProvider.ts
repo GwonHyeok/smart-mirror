@@ -9,8 +9,14 @@ import * as util from 'util'
 export class ApplicationProvider {
 
     userApplicationInfos: UserApplicationInfo[]
+    components: string[] = []
+    services: any[] = []
 
     async setUserApplicationInfos(userApplicationInfos) {
+        // Clear Components & services
+        this.components.length = 0
+        this.services.length = 0
+
         this.userApplicationInfos = userApplicationInfos
     }
 
@@ -37,7 +43,14 @@ export class ApplicationProvider {
 
         return null
     }
-    
+
+    addComponent(component: string) {
+        this.components.push(component)
+    }
+
+    getComponents(): string[] {
+        return this.components
+    }
 }
 
 const instance = new ApplicationProvider()

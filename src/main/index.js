@@ -7,6 +7,7 @@ import { mainWindowProvider } from './util/MainWindowProvider'
 
 import applicationProvider from './util/ApplicationProvider'
 import vueProvider from './util/VueProvider'
+import { Logger } from './util/Logger';
 
 /**
  * Set `__static` path to static files in production
@@ -19,6 +20,10 @@ if (process.env.NODE_ENV !== 'development') {
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
+
+// Initialize Application
+const applicationLoader = new ApplicationLoader()
+const packageManager = new PackageManager()
 
 function createWindow() {
 
@@ -73,16 +78,25 @@ app.on('ready', () => {
  */
 ipcMain.on('initialize-user-applications', (event, arg) => {
 
-  // Initialize Application
-  const applicationLoader = new ApplicationLoader()
-  const packageManager = new PackageManager()
-
   // Load Application
   applicationLoader.loadUserApplicatioin()
     .then(userApplications => applicationProvider.setUserApplicationInfos(userApplications))
     .then(_ => applicationProvider.getUserApplicationInfos())
     .then(userApplications => packageManager.registerPackages(userApplications))
     .then(result => mainWindowProvider.getMainWindow().webContents.send('launchApp'))
+})
+
+/**
+ * Get Registered Components Name
+ * 
+ * Get Registered User Application Component Names
+ */
+ipcMain.on('get-registered-component-names', (event) => {
+  const componentNames = applicationProvider.getComponents()
+  Logger.info('Get Registered Component Names')
+  componentNames.forEach(componentName => Logger.verbose(`Registered Component Name : ${componentName}`))
+
+  event.sender.send('response-get-registered-component-names', componentNames)
 })
 
 // Setup Global Variables
