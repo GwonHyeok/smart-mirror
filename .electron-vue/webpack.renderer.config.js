@@ -18,7 +18,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue', 'vue-lottie']
+let whiteListedModules = ['vue', 'vue-lottie', 'vue-draggable-resizable']
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',

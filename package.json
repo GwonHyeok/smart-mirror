@@ -59,6 +59,7 @@
     "axios": "^0.16.1",
     "global-modules": "^1.0.0",
     "vue": "^2.3.3",
+    "vue-draggable-resizable": "^1.6.0",
     "vue-electron": "^1.0.6",
     "vue-lottie": "^0.1.2",
     "vue-router": "^2.5.3",
