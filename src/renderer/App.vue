@@ -5,14 +5,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'universe-mirror'
-  }
+export default {
+  name: "app"
+};
 </script>
 
 <style>
-  body {
-    background-color: black;
-    color: white;
-  }
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
+
+body {
+  background-color: black;
+  color: white;
+  font-family: "Source Sans Pro", sans-serif;
+  padding: 0;
+  margin: 0;
+}
 </style>

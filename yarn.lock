@@ -1325,6 +1325,10 @@ body-parser@1.18.2, body-parser@^1.16.1:
     raw-body "2.3.2"
     type-is "~1.6.15"
 
+bodymovin@^4.8.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/bodymovin/-/bodymovin-4.13.0.tgz#06d97c0130e2334dccb33bea638136f88a74540b"
+
 bonjour@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bonjour/-/bonjour-3.5.0.tgz#8e890a183d8ee9a2393b3844c691a42bcf7bc9f5"
@@ -8331,6 +8335,14 @@ vue-loader@^13.0.5:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-lottie@^0.1.1, vue-lottie@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/vue-lottie/-/vue-lottie-0.1.2.tgz#49a51a9666fd95311d6df0e2cf968eb2f0b0c85e"
+  dependencies:
+    bodymovin "^4.8.0"
+    vue "^2.2.1"
+    vue-lottie "^0.1.1"
+
 vue-router@^2.5.3:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"
@@ -8353,7 +8365,7 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.3.3:
+vue@^2.2.1, vue@^2.3.3:
   version "2.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
 
