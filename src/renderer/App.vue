@@ -19,5 +19,7 @@ body {
   font-family: "Source Sans Pro", sans-serif;
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 </style>
