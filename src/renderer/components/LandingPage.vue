@@ -11,7 +11,6 @@ export default {
   name: "landing-page",
   watch: {
     registeredComponents() {
-      console.log("Watch Changed Register Components");
       this.installedComponents = this.registeredComponents;
     }
   },
