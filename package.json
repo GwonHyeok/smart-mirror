@@ -1,8 +1,8 @@
 {
-  "name": "smart-mirror",
+  "name": "universe-mirror",
   "version": "0.0.0",
   "author": "GwonHyeok <me@ghyeok.io>",
-  "description": "Smart Mirror",
+  "description": "Universe Mirror",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "smart-mirror",
+    "productName": "universe-mirror",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"

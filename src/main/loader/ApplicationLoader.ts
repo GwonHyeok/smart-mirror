@@ -124,8 +124,8 @@ export default class ApplicationLoader {
             packageInfo = await this.parsePackageInfo(packageJsonPath)
             const { name, version, keywords, main } = packageInfo
 
-            // It has Smart Mirror App Keywords (aka smart-mirror)
-            if (keywords) hasSmartMirrorAppKeyword = keywords.indexOf('smart-mirror') !== -1
+            // It has Smart Mirror App Keywords (aka universe-mirror)
+            if (keywords) hasSmartMirrorAppKeyword = keywords.indexOf('universe-mirror') !== -1
 
             // Smart Mirror App Keyword
             if (!hasSmartMirrorAppKeyword) return null
