@@ -1,5 +1,5 @@
 <template>
-    <div class="um-user-application" v-if="isInitialized">
+    <div class="um-user-application" v-if="isInitialized" :ref="appComponent">
         <vue-draggable-resizable  :x="x" :y="y" :resizable="false" @dragging="onChangePosition" @dragstop="onStopChangePosition">
             <div :is="appComponent"></div>
         </vue-draggable-resizable>
@@ -11,7 +11,7 @@ import VueDraggableResizable from "vue-draggable-resizable";
 
 export default {
   name: "user-app-component",
-  props: ["appComponent"],
+  props: ["appComponent", "onMoving"],
   created() {
     // Set Element Position To Saved Position
     this.x = Math.random() * (document.body.offsetWidth * 0.8);
@@ -47,6 +47,7 @@ export default {
       this.y = y;
 
       // processing
+      this.onMoving(this.appComponent, this.x, this.y);
     },
     onStopChangePosition(x, y) {
       this.isProcessChanging = false;
@@ -60,3 +61,9 @@ export default {
   }
 };
 </script>
+<style>
+.um-user-application > .vdr {
+  width: initial !important;
+  height: initial !important;
+}
+</style>
