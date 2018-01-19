@@ -1,4 +1,3 @@
-import IRegister from "./register/IRegister";
 import { Logger } from "../util/Logger";
 import UserApplication from "./UserApplication";
 import { mainWindowProvider } from "../util/MainWindowProvider"

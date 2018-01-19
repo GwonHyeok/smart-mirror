@@ -2,7 +2,6 @@ import NodeModule from './NodeModule'
 import PackageInfo from './PackageInfo'
 import UserApplicationComponent from './UserApplicationComponent';
 import UserApplicationService from './UserApplicationService';
-import IRegister from './register/IRegister';
 
 export default class UserApplicationInfo implements PackageInfo {
     name: string
