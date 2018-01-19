@@ -1,14 +1,20 @@
 <template>
   <div id="universe-mirror">
-    <div class="um-user-application" v-for="component in installedComponents">
-      <div :is="component"></div>
-    </div>
+    <user-app-component
+      v-for="component in installedComponents"
+      :app-component="component">
+    </user-app-component>
   </div>
 </template>
 
 <script>
+import UserAppComponent from "./UniverseMirror/UserAppComponent";
+
 export default {
-  name: "landing-page",
+  name: "universe-mirror-page",
+  components: {
+    UserAppComponent
+  },
   watch: {
     registeredComponents() {
       this.installedComponents = this.registeredComponents;
