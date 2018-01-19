@@ -1,4 +1,3 @@
-# smart-mirror
+# Universe Mirror
 
-> Universe Mirror
-| 🌌 Universe Mirror is scalable smart mirror, Awesome...🤭🕶️
+> 🌌 Universe Mirror is scalable smart mirror, Awesome...🤭🕶️
